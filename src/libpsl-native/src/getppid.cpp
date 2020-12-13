@@ -13,6 +13,10 @@
 #include <sys/sysctl.h>
 #endif
 
+#if defined(__FreeBSD__)
+#include <sys/sysctl.h>
+#endif
+
 //! @brief GetPPid returns the parent process id for a process
 //!
 //! GetPPid
@@ -27,7 +31,7 @@
 pid_t GetPPid(pid_t pid)
 {
 
-#if defined(__APPLE__) && defined(__MACH__)
+#if (defined(__APPLE__) && defined(__MACH__)) || defined(__FreeBSD__)
 
     const pid_t PIDUnknown = UINT_MAX;
     struct kinfo_proc info;
@@ -38,7 +42,15 @@ pid_t GetPPid(pid_t pid)
     if (length == 0)
         return PIDUnknown;
 
+#if defined(__FreeBSD__)
+
+    return info.ki_ppid;
+
+#else
+
     return info.kp_eproc.e_ppid;
+
+#endif
 
 #else
 

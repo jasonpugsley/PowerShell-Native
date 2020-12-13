@@ -20,6 +20,7 @@
 #endif
 
 #if __FreeBSD__
+#include <sys/sysctl.h>
 #include <sys/user.h>
 #endif
 
